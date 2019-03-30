@@ -7,31 +7,73 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+	if (n < 0) {
+		return null;
+	} else if (n === 0) {
+		return 1;
+	} else {
+		return n * factorial(n - 1);
+	}
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+	if (array.length === 0) {
+		return 0;
+	}	
+	var last = array[array.length - 1];
+	return last + sum(array.slice(0, array.length - 1));
+	
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+	if (array.length === 0) {
+		return 0;
+	}
+	var arr = array.flat(10);
+   return arr[0] + arraySum(arr.slice(1));
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+	if (n === 0) {
+		return true;
+	} else if (n === 1 || n === -1) {
+		return false;
+	}
+	if (n > 0) {
+      return isEven(n - 2);
+	} else {
+      return isEven(n + 2);
+	}
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+	if (n === 1 || n === 0 || n === -1) {
+		return 0;
+	} else if (n < -1) {
+        return n + 1 + sumBelow(n + 1);
+	} else {
+		return n - 1 + sumBelow(n - 1);
+	}
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+	if (x === y || x + 1 === y || x - 1 === y) {
+		return [];
+	} else if (x < y) {
+		return [x+1, range(x + 1, y).flat()].flat();
+	} else {
+		return [x - 1, range(x - 1, y).flat()].flat();
+	}
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +82,15 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+	if (exp === 1) {
+		return base;
+	} else if (exp === 0) {
+		return 1;
+	} else if (exp < 0) {
+		return Number((1 / base * exponent(base, exp + 1)).toFixed(5));
+	} else {
+		return base * exponent(base, exp - 1);
+	}
 };
 
 // 8. Determine if a number is a power of two.
@@ -47,14 +98,41 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+	if (n < 2 && n !== 1) {
+		return false;
+	} else if (n === 2 || n === 1) {
+		return true;
+	} else {
+		return powerOfTwo(n / 2);
+	}
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+	if (string.length === 0 || string.length === 1) {
+		return string;
+	} else {
+		return string[string.length - 1] + reverse(string.split('').slice(0, string.length - 1).join(''));
+	}
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+	var trim = string.toLowerCase();
+  if (trim.includes(' ')) {
+    trim = string.split(' ').join('').toLowerCase();
+  }
+	if (trim.length === 1 || trim.length === 0) {
+		return true;
+  } else if (trim.length === 2 && trim[0] === trim[1]) {
+    return true;
+	} else {
+		if (trim[0] === trim[trim.length-1]) {
+			return palindrome(trim.split('').slice(1, trim.length-1).join(''));
+		} else {
+			return false;
+		}
+	}
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -63,6 +141,36 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  if (y === 0) {
+    return NaN;
+  }
+	if (x < y) {
+		if (y < 0) {
+          if (x - y > y) {
+		    return x - y;		
+	      } else {
+		    return modulo(x - y, y); 
+		    }
+		} else {
+          if (Number(JSON.stringify(x).split('').slice(1).join('')) >= y) {
+          	if (Number(JSON.stringify(x + y).split('').slice(1).join('')) < y) {
+		          return x + y;		
+	          } else {
+	      	    return modulo(x + y, y);
+	          } 
+          } else {
+          	return x;
+          }  
+    }
+	} else if (x === y) {
+		return 0;		
+  } else if (y < x && y < 0) {  
+    return x;
+	} else if (x - y < y) {
+		return x - y;		
+	} else {
+		return modulo(x - y, y);
+	}
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
